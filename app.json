@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Adisurc",
+    "slug": "adisurc",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "sdkVersion": "54.0.0",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.adisurc.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Adisurc needs camera access to scan QR codes at the dormitory gate."
+      }
+    },
+    "android": {
+      "package": "com.adisurc.app",
+      "permissions": ["android.permission.CAMERA"]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Adisurc to access your camera to scan the gate QR code."
+        }
+      ]
+    ]
+  }
+}
