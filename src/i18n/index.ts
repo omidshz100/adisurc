@@ -3,7 +3,6 @@ import { Language, Translation } from '../types';
 export const I18N: Record<Language, Translation> = {
   en: {
     code: 'en', dir: 'ltr', flag: '🇬🇧', name: 'English', short: 'EN',
-    date: 'TUESDAY, APR 22',
     hello: 'Hello,', fullName: 'Daniel Arman',
     room: 'Room 701', roomLabel: 'ROOM NUMBER', nameLabel: 'FULL NAME',
     welcome: 'Welcome. Sign in to continue.',
@@ -32,10 +31,10 @@ export const I18N: Record<Language, Translation> = {
     all: 'All', exits: 'Exits', returns: 'Returns',
     today: 'Today · Tue Apr 22', mon: 'Mon Apr 21', sun: 'Sun Apr 20', sat: 'Sat Apr 19',
     mainGate: 'Main Gate',
+    profileTitle: 'Profile', saveChanges: 'Save changes', logout: 'Log out',
   },
   it: {
     code: 'it', dir: 'ltr', flag: '🇮🇹', name: 'Italiano', short: 'IT',
-    date: 'MARTEDÌ, 22 APR',
     hello: 'Ciao,', fullName: 'Daniel Arman',
     room: 'Stanza 701', roomLabel: 'NUMERO STANZA', nameLabel: 'NOME COMPLETO',
     welcome: 'Benvenuto. Accedi per continuare.',
@@ -64,10 +63,10 @@ export const I18N: Record<Language, Translation> = {
     all: 'Tutti', exits: 'Uscite', returns: 'Rientri',
     today: 'Oggi · Mar 22 Apr', mon: 'Lun 21 Apr', sun: 'Dom 20 Apr', sat: 'Sab 19 Apr',
     mainGate: 'Cancello principale',
+    profileTitle: 'Profilo', saveChanges: 'Salva modifiche', logout: 'Esci',
   },
   fa: {
     code: 'fa', dir: 'rtl', flag: '🇮🇷', name: 'فارسی', short: 'FA',
-    date: 'سه‌شنبه، ۲ اردیبهشت',
     hello: 'سلام،', fullName: 'دانیال آرمان',
     room: 'اتاق ۷۰۱', roomLabel: 'شمارهٔ اتاق', nameLabel: 'نام کامل',
     welcome: 'خوش آمدید. برای ادامه وارد شوید.',
@@ -97,10 +96,10 @@ export const I18N: Record<Language, Translation> = {
     today: 'امروز · سه‌شنبه ۲ اردیبهشت', mon: 'دوشنبه ۱ اردیبهشت',
     sun: 'یک‌شنبه ۳۱ فروردین', sat: 'شنبه ۳۰ فروردین',
     mainGate: 'دروازهٔ اصلی',
+    profileTitle: 'پروفایل', saveChanges: 'ذخیره تغییرات', logout: 'خروج از حساب',
   },
   ar: {
     code: 'ar', dir: 'rtl', flag: '🇸🇦', name: 'العربية', short: 'AR',
-    date: 'الثلاثاء، ٢٢ أبريل',
     hello: 'مرحبًا،', fullName: 'دانيال أرمان',
     room: 'غرفة ٧٠١', roomLabel: 'رقم الغرفة', nameLabel: 'الاسم الكامل',
     welcome: 'أهلًا بك. سجّل الدخول للمتابعة.',
@@ -130,5 +129,6 @@ export const I18N: Record<Language, Translation> = {
     today: 'اليوم · الثلاثاء ٢٢ أبريل', mon: 'الاثنين ٢١ أبريل',
     sun: 'الأحد ٢٠ أبريل', sat: 'السبت ١٩ أبريل',
     mainGate: 'البوابة الرئيسية',
+    profileTitle: 'الملف الشخصي', saveChanges: 'حفظ التغييرات', logout: 'تسجيل الخروج',
   },
 };

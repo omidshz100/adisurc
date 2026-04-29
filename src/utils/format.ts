@@ -1,3 +1,38 @@
+import { Language } from '../types';
+
+const LOCALE: Record<Language, string> = {
+  en: 'en-US',
+  it: 'it-IT',
+  fa: 'fa-IR',
+  ar: 'ar-EG',
+};
+
+export function formatDate(lang: Language): string {
+  const date = new Date();
+  const locale = LOCALE[lang];
+  const weekday = new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(date);
+  const day = new Intl.DateTimeFormat(locale, { day: 'numeric' }).format(date);
+  if (lang === 'en') {
+    const month = new Intl.DateTimeFormat(locale, { month: 'short' }).format(date);
+    return `${weekday.toUpperCase()}, ${month.toUpperCase()} ${day}`;
+  }
+  if (lang === 'it') {
+    const month = new Intl.DateTimeFormat(locale, { month: 'short' }).format(date);
+    return `${weekday.toUpperCase()}, ${day} ${month.toUpperCase()}`;
+  }
+  const month = new Intl.DateTimeFormat(locale, { month: 'long' }).format(date);
+  return `${weekday}، ${day} ${month}`;
+}
+
+export function formatClock(date: Date, lang: Language): string {
+  return new Intl.DateTimeFormat(LOCALE[lang], {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).format(date);
+}
+
 export function formatTime(ts: number): string {
   const d = new Date(ts);
   const h = String(d.getHours()).padStart(2, '0');

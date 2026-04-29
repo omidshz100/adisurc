@@ -10,7 +10,6 @@ export interface Translation {
   flag: string;
   name: string;
   short: string;
-  date: string;
   hello: string;
   fullName: string;
   room: string;
@@ -61,6 +60,9 @@ export interface Translation {
   sun: string;
   sat: string;
   mainGate: string;
+  profileTitle: string;
+  saveChanges: string;
+  logout: string;
 }
 
 export interface User {
@@ -81,4 +83,5 @@ export type RootStackParamList = {
   Scan: { mode: TripMode };
   Confirm: { mode: TripMode; gate: string };
   History: undefined;
+  Profile: undefined;
 };

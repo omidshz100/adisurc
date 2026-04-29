@@ -9,6 +9,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { ScanScreen } from '../screens/ScanScreen';
 import { ConfirmScreen } from '../screens/ConfirmScreen';
 import { HistoryScreen } from '../screens/HistoryScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -27,6 +28,7 @@ export function RootNavigator() {
           <Stack.Screen name="Scan" component={ScanScreen} />
           <Stack.Screen name="Confirm" component={ConfirmScreen} />
           <Stack.Screen name="History" component={HistoryScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
         </>
       ) : (
         <Stack.Screen name="Login" component={LoginScreen} />

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -9,7 +9,7 @@ import { useApp } from '../context/AppContext';
 import { AZ, ff } from '../theme';
 import { LangChip } from '../components/LangChip';
 import { LangPickerModal } from '../components/LangPickerModal';
-import { formatTime } from '../utils/format';
+import { formatClock, formatDate, formatTime } from '../utils/format';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -18,6 +18,12 @@ export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const [showLang, setShowLang] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
   const toastAnim = useRef(new Animated.Value(0)).current;
 
   const showToast = (msg: string) => {
@@ -57,13 +63,18 @@ export function HomeScreen() {
 
         {/* Top strip: date · lang chip · avatar */}
         <View style={[s.topStrip, { flexDirection: row }]}>
-          <Text style={[s.dateLabel, { flex: 1, textAlign: ta, fontFamily: ff(t.code, 'semiBold') }]}>
-            {t.date}
-          </Text>
-          <LangChip t={t} onPress={() => setShowLang(true)} />
-          <View style={s.avatar}>
-            <Text style={[s.avatarText, { fontFamily: ff(t.code, 'bold') }]}>{initials}</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={[s.dateLabel, { textAlign: ta, fontFamily: ff(t.code, 'semiBold') }]}>
+              {formatDate(t.code)}
+            </Text>
+            <Text style={[s.clockLabel, { textAlign: ta, fontFamily: ff(t.code, 'regular') }]}>
+              {formatClock(now, t.code)}
+            </Text>
           </View>
+          <LangChip t={t} onPress={() => setShowLang(true)} />
+          <TouchableOpacity style={s.avatar} onPress={() => navigation.navigate('Profile')} activeOpacity={0.75}>
+            <Text style={[s.avatarText, { fontFamily: ff(t.code, 'bold') }]}>{initials}</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Greeting */}
@@ -80,9 +91,7 @@ export function HomeScreen() {
 
         {/* Status card */}
         <View style={[s.statusCard, { flexDirection: row }]}>
-          <View style={[s.statusIcon, { backgroundColor: isInDorm ? AZ.navySoft : AZ.goldSoft }]}>
-            <View style={[s.statusDot, { backgroundColor: isInDorm ? AZ.gold : AZ.danger }]} />
-          </View>
+          <PulseDot color={isInDorm ? AZ.gold : AZ.danger} bgColor={isInDorm ? AZ.navySoft : AZ.goldSoft} />
           <View style={{ flex: 1, alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
             <Text style={[s.statusTitle, { textAlign: ta, fontFamily: ff(t.code, 'semiBold') }]}>
               {statusText}
@@ -199,6 +208,28 @@ interface BigActionProps {
   onDisabledPress?: () => void;
 }
 
+function PulseDot({ color, bgColor }: { color: string; bgColor: string }) {
+  const pulse = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const anim = Animated.loop(
+      Animated.timing(pulse, { toValue: 1, duration: 1400, useNativeDriver: true })
+    );
+    anim.start();
+    return () => anim.stop();
+  }, [pulse]);
+
+  const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 3.2] });
+  const opacity = pulse.interpolate({ inputRange: [0, 0.4, 1], outputRange: [0.55, 0.2, 0] });
+
+  return (
+    <View style={[s.statusIcon, { backgroundColor: bgColor }]}>
+      <Animated.View style={[s.pulseRing, { backgroundColor: color, transform: [{ scale }], opacity }]} />
+      <View style={[s.statusDot, { backgroundColor: color }]} />
+    </View>
+  );
+}
+
 function BigAction({ label, sub, bg, fg, accent, iconType, isRTL, t, disabled, onPress, onDisabledPress }: BigActionProps) {
   const iconBg = bg === AZ.navy ? 'rgba(255,255,255,0.1)' : '#fff';
   return (
@@ -240,6 +271,12 @@ const s = StyleSheet.create({
     fontSize: 11,
     color: AZ.inkFaint,
     letterSpacing: 0.6,
+  },
+  clockLabel: {
+    fontSize: 13,
+    color: AZ.inkSoft,
+    letterSpacing: 0.3,
+    marginTop: 1,
   },
   avatar: {
     width: 38,
@@ -312,7 +349,12 @@ const s = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: AZ.gold,
+  },
+  pulseRing: {
+    position: 'absolute',
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   statusTitle: {
     fontSize: 14,

@@ -11,6 +11,7 @@ import {
   loadLang,
   loadTrips,
   loadUser,
+  removeUser,
   saveLang,
   saveTrip,
   saveUser,
@@ -53,6 +54,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const setUser = async (u: User | null) => {
     setUserState(u);
     if (u) await saveUser(u);
+    else await removeUser();
   };
 
   const setLanguage = async (lang: Language) => {
