@@ -14,12 +14,27 @@ A React Native (Expo) mobile app that lets dormitory residents log their exits a
 
 ---
 
+## Screenshots
+
+Place your screenshots inside a `screenshots/` folder at the project root, using the filenames below.
+
+| Login | Home | Profile |
+|:---:|:---:|:---:|
+| ![Login](screenshots/login.png) | ![Home](screenshots/home.png) | ![Profile](screenshots/profile.png) |
+
+| Scan | Confirm | History |
+|:---:|:---:|:---:|
+| ![Scan](screenshots/scan.png) | ![Confirm](screenshots/confirm.png) | ![History](screenshots/history.png) |
+
+---
+
 ## Screens
 
 | Screen | Description |
 |---|---|
 | **Login** | First-time setup: enter full name and room number |
-| **Home** | Live status, Exit / Return action buttons, history shortcut |
+| **Home** | Live status, live clock, pulsing status dot, Exit / Return action buttons |
+| **Profile** | View and edit name & room number, logout |
 | **Scan** | Camera view to scan the gate QR code |
 | **Confirm** | Review trip details (gate, time, resident) before confirming |
 | **History** | Chronological log of past trips with All / Exits / Returns filter |
@@ -95,6 +110,7 @@ adisurc/
 │   ├── screens/               # Screen components
 │   │   ├── LoginScreen.tsx
 │   │   ├── HomeScreen.tsx
+│   │   ├── ProfileScreen.tsx
 │   │   ├── ScanScreen.tsx
 │   │   ├── ConfirmScreen.tsx
 │   │   └── HistoryScreen.tsx
