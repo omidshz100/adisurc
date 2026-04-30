@@ -167,6 +167,21 @@
     .step-content p  { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
     body.rtl .step { flex-direction: row-reverse; }
 
+    /* ── VIDEO ── */
+    .video-section { background: var(--navy-soft); padding: 80px 24px; }
+    .video-inner   { max-width: 860px; margin: 0 auto; }
+    .video-wrap {
+      position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(27,43,75,.22);
+      border: 1px solid var(--line);
+      margin-top: 40px;
+    }
+    .video-wrap iframe {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; border: none; border-radius: 20px;
+    }
+
     /* ── RESILIENCE ── */
     .resilience-section { background: var(--navy); padding: 80px 24px; }
     .resilience-inner   { max-width: 1100px; margin: 0 auto; }
@@ -383,6 +398,26 @@
   </div>
 </div>
 
+<!-- VIDEO -->
+<div class="video-section">
+  <div class="video-inner">
+    <div class="fade-up" style="text-align:center">
+      <p class="section-label" data-key="videoLabel">Video</p>
+      <h2 class="section-title" style="text-align:center" data-key="videoTitle">Guarda l'app in funzione</h2>
+      <p class="section-sub" style="text-align:center; margin: 0 auto 0" data-key="videoSub">Una dimostrazione completa del flusso di uscita e rientro — dal cancello allo storico.</p>
+    </div>
+    <div class="video-wrap fade-up">
+      <!-- Replace YOUR_VIDEO_ID with your YouTube video ID -->
+      <iframe
+        src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+        title="Adisurc Demo"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</div>
+
 <!-- RESILIENCE -->
 <div class="resilience-section">
   <div class="resilience-inner">
@@ -562,6 +597,7 @@ const T = {
     ctaTitle: 'Pronti a modernizzare il vostro dormitorio?',
     ctaSub:   'Guarda il video, esplora il prototipo e dicci cosa ne pensi. Siamo pronti per il pilota.',
     ctaBtn:   'Contattaci per il feedback →',
+    videoLabel: 'Video', videoTitle: "Guarda l'app in funzione", videoSub: 'Una dimostrazione completa del flusso di uscita e rientro — dal cancello allo storico.',
     footerBy: 'Sviluppato da',
   },
   en: {
@@ -610,6 +646,7 @@ const T = {
     ctaTitle: 'Ready to modernise your dormitory?',
     ctaSub:   'Watch the video, explore the prototype and tell us what you think. We are ready for the pilot.',
     ctaBtn:   'Contact us for feedback →',
+    videoLabel: 'Video', videoTitle: 'Watch the app in action', videoSub: 'A full walkthrough of the exit and return flow — from the gate to the history log.',
     footerBy: 'Built by',
   },
   fa: {
@@ -658,6 +695,7 @@ const T = {
     ctaTitle: 'آماده‌اید خوابگاه خود را مدرن کنید؟',
     ctaSub:   'ویدیو را ببینید، پروتوتایپ را بررسی کنید و نظرتان را با ما در میان بگذارید.',
     ctaBtn:   'برای بازخورد تماس بگیرید →',
+    videoLabel: 'ویدیو', videoTitle: 'اپ را در عمل ببینید', videoSub: 'یک نمایش کامل از فرایند خروج و بازگشت — از دروازه تا تاریخچه.',
     footerBy: 'طراحی شده توسط',
   }
 };
