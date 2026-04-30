@@ -67,6 +67,22 @@
     }
     .lang-btn.active { background: var(--gold); color: var(--navy); }
 
+    .gate-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      color: rgba(255,255,255,.85);
+      font-size: 13px; font-weight: 600;
+      padding: 7px 14px; border-radius: 100px;
+      text-decoration: none;
+      transition: background .2s, color .2s;
+      white-space: nowrap;
+    }
+    .gate-link:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+    .gate-link-dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+    .gate-link:hover .gate-link-dot { background: var(--navy); }
+    @media (max-width: 480px) { .gate-link span { display: none; } }
+
     /* ── HERO ── */
     .hero {
       background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #2a4070 100%);
@@ -326,10 +342,16 @@
     <div class="nav-logo-icon"><img src="logo.png" alt="Adisurc logo" /></div>
     <span class="nav-logo-text">Adisurc</span>
   </a>
-  <div class="lang-switcher">
-    <button class="lang-btn active" onclick="setLang('it')">IT</button>
-    <button class="lang-btn"        onclick="setLang('en')">EN</button>
-    <button class="lang-btn"        onclick="setLang('fa')">FA</button>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <a class="gate-link" href="gate.html" target="_blank">
+      <div class="gate-link-dot"></div>
+      <span data-key="gateLink">Gate Display</span>
+    </a>
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('it')">IT</button>
+      <button class="lang-btn"        onclick="setLang('en')">EN</button>
+      <button class="lang-btn"        onclick="setLang('fa')">FA</button>
+    </div>
   </div>
 </nav>
 
@@ -609,6 +631,7 @@ const T = {
     ctaSub:   'Guarda il video, esplora il prototipo e dicci cosa ne pensi. Siamo pronti per il pilota.',
     ctaBtn:   'Contattaci per il feedback →',
     videoLabel: 'Video', videoTitle: "Guarda l'app in funzione", videoSub: 'Una dimostrazione completa del flusso di uscita e rientro — dal cancello allo storico.',
+    gateLink: 'Display Cancello',
     footerBy: 'Sviluppato da',
   },
   en: {
@@ -658,6 +681,7 @@ const T = {
     ctaSub:   'Watch the video, explore the prototype and tell us what you think. We are ready for the pilot.',
     ctaBtn:   'Contact us for feedback →',
     videoLabel: 'Video', videoTitle: 'Watch the app in action', videoSub: 'A full walkthrough of the exit and return flow — from the gate to the history log.',
+    gateLink: 'Gate Display',
     footerBy: 'Built by',
   },
   fa: {
@@ -707,6 +731,7 @@ const T = {
     ctaSub:   'ویدیو را ببینید، پروتوتایپ را بررسی کنید و نظرتان را با ما در میان بگذارید.',
     ctaBtn:   'برای بازخورد تماس بگیرید →',
     videoLabel: 'ویدیو', videoTitle: 'اپ را در عمل ببینید', videoSub: 'یک نمایش کامل از فرایند خروج و بازگشت — از دروازه تا تاریخچه.',
+    gateLink: 'نمایش دروازه',
     footerBy: 'طراحی شده توسط',
   }
 };

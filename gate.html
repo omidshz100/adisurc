@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Adizrak · Gate Display</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F8F6F1;
+      --surface:   #ffffff;
+      --navy:      #1B2B4B;
+      --navy-soft: #E6E9F0;
+      --ink-soft:  #5b6478;
+      --ink-faint: #8c93a3;
+      --line:      #E6E2D6;
+      --gold:      #C9A84C;
+    }
+
+    body {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      padding: 24px 16px;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 28px 28px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 8px 48px rgba(27,43,75,0.10), 0 1px 4px rgba(27,43,75,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header */
+    .header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .logo-row { display: flex; align-items: center; gap: 10px; }
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: var(--bg); border-radius: 11px;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .logo-name { font-size: 17px; font-weight: 700; color: var(--navy); letter-spacing: -0.3px; }
+    .clock {
+      font-size: 13px; color: var(--ink-soft); font-weight: 600;
+      font-variant-numeric: tabular-nums; letter-spacing: 0.4px;
+      background: var(--bg); padding: 5px 10px;
+      border-radius: 100px; border: 1px solid var(--line);
+    }
+
+    /* Gate badge */
+    .gate-badge {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--navy); color: #fff;
+      padding: 7px 15px; border-radius: 100px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.4px;
+      margin-bottom: 22px;
+    }
+    .gate-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+
+    /* QR wrapper */
+    .qr-wrap {
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 14px;
+      margin-bottom: 22px;
+      position: relative;
+    }
+    /* Gold corner brackets */
+    .qr-wrap::before, .qr-wrap::after, .qr-bl, .qr-br {
+      content: ''; position: absolute; width: 22px; height: 22px;
+    }
+    .qr-wrap::before { top:-2px; left:-2px; border-top:2.5px solid var(--gold); border-left:2.5px solid var(--gold); border-top-left-radius:20px; }
+    .qr-wrap::after  { top:-2px; right:-2px; border-top:2.5px solid var(--gold); border-right:2.5px solid var(--gold); border-top-right-radius:20px; }
+    .qr-bl { bottom:-2px; left:-2px; border-bottom:2.5px solid var(--gold); border-left:2.5px solid var(--gold); border-bottom-left-radius:20px; }
+    .qr-br { bottom:-2px; right:-2px; border-bottom:2.5px solid var(--gold); border-right:2.5px solid var(--gold); border-bottom-right-radius:20px; }
+
+    #qr-img {
+      display: block;
+      width: 256px; height: 256px;
+      border-radius: 8px;
+      transition: opacity 0.2s ease;
+    }
+    #qr-img.fading { opacity: 0.3; }
+
+    /* Error state */
+    .qr-error {
+      width: 256px; height: 256px;
+      display: none;
+      align-items: center; justify-content: center;
+      background: var(--navy-soft);
+      border-radius: 8px;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    /* Countdown */
+    .countdown-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .ring-svg { transform: rotate(-90deg); flex-shrink: 0; }
+    .ring-bg { fill: none; stroke: var(--navy-soft); stroke-width: 3; }
+    .ring-fg { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; }
+    .countdown-text { font-size: 13px; color: var(--ink-soft); font-weight: 500; }
+    .countdown-text strong { color: var(--navy); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* Instruction */
+    .instruction { font-size: 13px; color: var(--ink-faint); text-align: center; line-height: 1.55; }
+
+    /* Footer */
+    .footer {
+      font-size: 11px; color: var(--ink-faint); text-align: center;
+      letter-spacing: 0.7px; text-transform: uppercase; font-weight: 600;
+    }
+
+    @media (min-width: 600px) {
+      .card { max-width: 420px; padding: 36px 36px 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo-icon"><img src="logo.png" alt="Adisurc" /></div>
+      <span class="logo-name">Adizrak</span>
+    </div>
+    <span class="clock" id="clock">--:--:--</span>
+  </div>
+
+  <div class="gate-badge">
+    <div class="gate-dot"></div>
+    <span id="gate-label"></span>
+  </div>
+
+  <div class="qr-wrap">
+    <img id="qr-img" alt="Gate QR code">
+    <div class="qr-error" id="qr-error">
+      Internet required to<br>generate QR code.<br>Check your connection.
+    </div>
+    <div class="qr-bl"></div>
+    <div class="qr-br"></div>
+  </div>
+
+  <div class="countdown-row">
+    <svg class="ring-svg" width="30" height="30" viewBox="0 0 30 30">
+      <circle class="ring-bg" cx="15" cy="15" r="11"/>
+      <circle class="ring-fg" id="ring-fg" cx="15" cy="15" r="11"
+              stroke-dasharray="69.12" stroke-dashoffset="0"/>
+    </svg>
+    <span class="countdown-text">New code in <strong id="countdown-num">30s</strong></span>
+  </div>
+
+  <p class="instruction">
+    Open Adizrak, tap <strong>Exit</strong> or <strong>Return</strong>,<br>
+    then hold your phone over this code.
+  </p>
+</div>
+
+<p class="footer">Adizrak Dormitory · Gate Management System</p>
+
+<script>
+// ─── CONFIG ──────────────────────────────────────────────────
+// Change GATE_SECRET here AND in adisurc/src/utils/qrValidation.ts
+const GATE_NAME   = 'Adizrak Main Gate';
+const GATE_SECRET = 'ADIZRAK-2025';
+const SLOT_MS     = 30_000;
+const CIRC        = 2 * Math.PI * 11; // svg ring circumference ≈ 69.12
+
+// ─── Hash — identical to qrValidation.ts ─────────────────────
+function simpleHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  }
+  return (h >>> 0).toString(16).padStart(8, '0');
+}
+
+function currentSlot() { return Math.floor(Date.now() / SLOT_MS); }
+
+function makePayload() {
+  const slot = currentSlot();
+  const pin  = simpleHash(GATE_SECRET + ':' + slot + ':' + GATE_NAME);
+  return JSON.stringify({ g: GATE_NAME, s: slot, p: pin });
+}
+
+// ─── QR via image API (no library needed) ────────────────────
+const qrImg   = document.getElementById('qr-img');
+const qrError = document.getElementById('qr-error');
+
+function renderQR() {
+  const data = encodeURIComponent(makePayload());
+  const url  = 'https://api.qrserver.com/v1/create-qr-code/'
+             + '?size=256x256&color=1B2B4B&bgcolor=FFFFFF&margin=8&data=' + data;
+
+  // Preload — swap only when new image is ready (no flicker)
+  const next = new Image();
+  next.onload = () => {
+    qrImg.src = next.src;
+    qrImg.style.display = 'block';
+    qrError.style.display = 'none';
+  };
+  next.onerror = () => {
+    qrImg.style.display = 'none';
+    qrError.style.display = 'flex';
+  };
+  next.src = url;
+}
+
+// ─── Countdown ring ──────────────────────────────────────────
+const ringFg   = document.getElementById('ring-fg');
+const countNum = document.getElementById('countdown-num');
+let lastSlot   = currentSlot();
+
+function updateCountdown() {
+  const remaining = SLOT_MS - (Date.now() % SLOT_MS);
+  const secs      = Math.ceil(remaining / 1000);
+  const fill      = remaining / SLOT_MS;
+
+  countNum.textContent = secs + 's';
+  ringFg.setAttribute('stroke-dashoffset', CIRC * (1 - fill));
+
+  const slot = currentSlot();
+  if (slot !== lastSlot) {
+    lastSlot = slot;
+    renderQR();
+  }
+}
+
+// ─── Clock ───────────────────────────────────────────────────
+const clockEl = document.getElementById('clock');
+function updateClock() {
+  const d = new Date();
+  clockEl.textContent =
+    String(d.getHours()).padStart(2,'0') + ':' +
+    String(d.getMinutes()).padStart(2,'0') + ':' +
+    String(d.getSeconds()).padStart(2,'0');
+}
+
+// ─── Start ───────────────────────────────────────────────────
+document.getElementById('gate-label').textContent = GATE_NAME;
+renderQR();
+updateClock();
+updateCountdown();
+setInterval(() => { updateClock(); updateCountdown(); }, 1000);
+</script>
+</body>
+</html>
