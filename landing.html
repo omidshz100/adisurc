@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="it" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adisurc · Dormitory Access Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:      #1B2B4B;
+      --navy-deep: #111d36;
+      --navy-soft: #E6E9F0;
+      --gold:      #C9A84C;
+      --gold-soft: #F5ECCF;
+      --bg:        #F8F6F1;
+      --surface:   #ffffff;
+      --ink-soft:  #5b6478;
+      --ink-faint: #8c93a3;
+      --line:      #E6E2D6;
+      --danger:    #B5482E;
+      --radius:    16px;
+      --shadow:    0 4px 24px rgba(27,43,75,.08);
+      --shadow-lg: 0 8px 48px rgba(27,43,75,.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--navy);
+      line-height: 1.6;
+    }
+    body.rtl { font-family: 'Vazirmatn', sans-serif; direction: rtl; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+      box-shadow: 0 2px 20px rgba(0,0,0,.18);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px; color: var(--navy);
+    }
+    .nav-logo-text { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -.3px; }
+
+    .lang-switcher {
+      display: flex; gap: 4px;
+      background: rgba(255,255,255,.1);
+      border-radius: 100px; padding: 4px;
+    }
+    .lang-btn {
+      padding: 6px 14px; border-radius: 100px; border: none;
+      background: transparent; color: rgba(255,255,255,.6);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: all .2s; font-family: inherit;
+    }
+    .lang-btn.active { background: var(--gold); color: var(--navy); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #2a4070 100%);
+      color: #fff;
+      padding: 100px 24px 88px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 20%, rgba(201,168,76,.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,.15);
+      border: 1px solid rgba(201,168,76,.3);
+      color: var(--gold);
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 6px 18px; border-radius: 100px; margin-bottom: 28px;
+    }
+    .hero-title {
+      font-size: clamp(30px, 5vw, 58px);
+      font-weight: 800; letter-spacing: -1px; line-height: 1.12;
+      max-width: 820px; margin: 0 auto 20px;
+    }
+    .hero-title span { color: var(--gold); }
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 19px);
+      color: rgba(255,255,255,.7);
+      max-width: 580px; margin: 0 auto 44px; font-weight: 400;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold); color: var(--navy);
+      font-weight: 700; font-size: 15px;
+      padding: 15px 30px; border-radius: 100px; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 24px rgba(201,168,76,.4);
+    }
+    .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,168,76,.55); }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+    .container-sm { max-width: 760px; margin: 0 auto; padding: 80px 24px; }
+
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(24px, 3.5vw, 38px);
+      font-weight: 800; letter-spacing: -.5px; line-height: 1.2;
+      color: var(--navy); margin-bottom: 14px;
+    }
+    .section-sub {
+      font-size: 16px; color: var(--ink-soft);
+      max-width: 580px; margin-bottom: 48px; line-height: 1.7;
+    }
+
+    /* ── PROBLEM ── */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .problem-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      transition: transform .25s;
+    }
+    .problem-card:hover { transform: translateY(-5px); }
+    .problem-icon {
+      width: 50px; height: 50px; border-radius: 14px;
+      background: #FEF3F2;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 16px;
+    }
+    .problem-card h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .problem-card p  { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: flex; flex-direction: column; }
+    .step { display: flex; gap: 20px; align-items: flex-start; }
+    .step-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--navy); color: var(--gold);
+      font-weight: 800; font-size: 16px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-line { width: 2px; flex: 1; min-height: 36px; background: var(--line); margin: 6px 0; }
+    .step-content { padding-bottom: 36px; padding-top: 10px; }
+    .step-content h3 { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .step-content p  { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+    body.rtl .step { flex-direction: row-reverse; }
+
+    /* ── RESILIENCE ── */
+    .resilience-section { background: var(--navy); padding: 80px 24px; }
+    .resilience-inner   { max-width: 1100px; margin: 0 auto; }
+    .resilience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px; margin-top: 48px;
+    }
+    .resilience-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius); padding: 32px;
+      transition: background .2s;
+    }
+    .resilience-card:hover { background: rgba(255,255,255,.1); }
+    .resilience-icon  { font-size: 34px; margin-bottom: 14px; }
+    .resilience-num   { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .resilience-card h3 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .resilience-card p  { font-size: 14px; color: rgba(255,255,255,.62); line-height: 1.7; }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+    .feature-icon {
+      width: 46px; height: 46px; border-radius: 13px;
+      background: var(--gold-soft);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 14px;
+    }
+    .feature-card h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .feature-card p  { font-size: 13px; color: var(--ink-soft); line-height: 1.65; }
+
+    /* ── TABLE ── */
+    .comparison-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; background: var(--surface); }
+    th { padding: 16px 20px; font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    th:first-child  { background: var(--bg);    color: var(--ink-soft); text-align: left; }
+    th:nth-child(2) { background: #FEF3F2;       color: var(--danger); }
+    th:nth-child(3) { background: var(--navy);   color: var(--gold); }
+    td { padding: 13px 20px; font-size: 14px; border-top: 1px solid var(--line); }
+    td:first-child  { color: var(--ink-soft); font-weight: 500; }
+    td:nth-child(2) { color: var(--danger);   background: #FEF9F8; }
+    td:nth-child(3) { color: #1a7a4a;         background: #F0FAF4; font-weight: 600; }
+    body.rtl th:first-child { text-align: right; }
+
+    /* ── SCREENSHOTS ── */
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 16px;
+    }
+    .screenshot-wrap {
+      border-radius: 20px; overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--line);
+      transition: transform .25s;
+    }
+    .screenshot-wrap:hover { transform: translateY(-8px) scale(1.02); }
+    .screenshot-wrap img { width: 100%; display: block; }
+    .screenshot-label {
+      padding: 10px 14px;
+      font-size: 12px; font-weight: 600;
+      color: var(--ink-soft); text-align: center;
+      background: var(--surface);
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--navy-deep), #1e3560);
+      padding: 88px 24px; text-align: center;
+    }
+    .cta-inner { max-width: 620px; margin: 0 auto; }
+    .cta-title {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800; color: #fff;
+      letter-spacing: -.5px; margin-bottom: 16px;
+    }
+    .cta-sub  { font-size: 16px; color: rgba(255,255,255,.65); margin-bottom: 38px; }
+    .cta-btn  {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold); color: var(--navy);
+      font-weight: 700; font-size: 15px;
+      padding: 15px 34px; border-radius: 100px; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 24px rgba(201,168,76,.38);
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,168,76,.55); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy-deep);
+      color: rgba(255,255,255,.38);
+      text-align: center; padding: 24px; font-size: 13px;
+    }
+    footer span { color: var(--gold); }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--line); max-width: 1100px; margin: 0 auto; }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .fade-up {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero { padding: 72px 20px 60px; }
+      .container, .container-sm { padding: 60px 20px; }
+      .resilience-section { padding: 60px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">A</div>
+    <span class="nav-logo-text">Adisurc</span>
+  </a>
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('it')">IT</button>
+    <button class="lang-btn"        onclick="setLang('en')">EN</button>
+    <button class="lang-btn"        onclick="setLang('fa')">FA</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge" data-key="badge">🚀 MVP · Prototipo Funzionante</div>
+  <h1 class="hero-title" data-key="heroTitle">Il Futuro del Controllo Accessi nei <span>Dormitori</span></h1>
+  <p class="hero-sub" data-key="heroSub">Una soluzione digitale, flessibile e igienica che sostituisce il registro cartaceo con tecnologia QR avanzata.</p>
+  <a href="#contact" class="hero-cta" data-key="heroCta">Scopri di più →</a>
+</div>
+
+<!-- PROBLEM -->
+<div class="container">
+  <div class="fade-up">
+    <p class="section-label" data-key="problemLabel">Il Problema</p>
+    <h2 class="section-title" data-key="problemTitle">Il sistema attuale ha dei limiti reali</h2>
+    <p class="section-sub" data-key="problemSub">I dormitori usano ancora il registro cartaceo e una penna condivisa. Semplice, ma lento, non igienico e impossibile da scalare.</p>
+  </div>
+  <div class="problem-grid">
+    <div class="problem-card fade-up">
+      <div class="problem-icon">✏️</div>
+      <h3 data-key="p1Title">Igiene a Rischio</h3>
+      <p data-key="p1Desc">Tutti i residenti condividono la stessa penna. Un rischio sanitario semplice da eliminare con la tecnologia.</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="problem-icon">🐢</div>
+      <h3 data-key="p2Title">Accesso Lento</h3>
+      <p data-key="p2Desc">Code all'ingresso, firma manuale, dipendenza dal personale al cancello. Il sistema rallenta tutti.</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="problem-icon">📉</div>
+      <h3 data-key="p3Title">Nessuna Visibilità</h3>
+      <p data-key="p3Desc">La direzione non sa in tempo reale chi è dentro e chi è fuori. Nessun dato, nessun controllo.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<div class="container-sm">
+  <div class="fade-up">
+    <p class="section-label" data-key="howLabel">Come Funziona</p>
+    <h2 class="section-title" data-key="howTitle">Tre secondi. Senza toccare nulla.</h2>
+    <p class="section-sub" data-key="howSub">Il residente apre l'app, inquadra il QR al cancello e conferma. La presenza fisica è l'unica chiave — nessuna delega possibile.</p>
+  </div>
+  <div class="steps">
+    <div class="step fade-up">
+      <div class="step-left">
+        <div class="step-num">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <h3 data-key="s1Title">Apri l'app e seleziona Uscita o Rientro</h3>
+        <p data-key="s1Desc">Il residente vede il suo stato attuale in tempo reale — dentro o fuori — e sceglie l'azione.</p>
+      </div>
+    </div>
+    <div class="step fade-up">
+      <div class="step-left">
+        <div class="step-num">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <h3 data-key="s2Title">Scansiona il QR code al cancello</h3>
+        <p data-key="s2Desc">Il QR ruota ogni 30 secondi. Solo chi è fisicamente davanti al cancello può scansionarlo.</p>
+      </div>
+    </div>
+    <div class="step fade-up">
+      <div class="step-left">
+        <div class="step-num">3</div>
+      </div>
+      <div class="step-content">
+        <h3 data-key="s3Title">Conferma e via</h3>
+        <p data-key="s3Desc">Il residente vede i dettagli: cancello, orario, nome. Conferma e il dato viene salvato e sincronizzato.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESILIENCE -->
+<div class="resilience-section">
+  <div class="resilience-inner">
+    <div class="fade-up">
+      <p class="section-label" data-key="resLabel">Architettura</p>
+      <h2 class="section-title" style="color:#fff" data-key="resTitle">Funziona sempre. In ogni condizione.</h2>
+      <p class="section-sub" style="color:rgba(255,255,255,.62); margin-bottom:0" data-key="resSub">Tre livelli di resilienza garantiscono che il sistema non si fermi mai — con internet, senza internet, o anche senza elettricità.</p>
+    </div>
+    <div class="resilience-grid">
+      <div class="resilience-card fade-up">
+        <div class="resilience-icon">🌐</div>
+        <div class="resilience-num" data-key="r1Num">Livello 1 · Online</div>
+        <h3 data-key="r1Title">Sincronizzazione in Tempo Reale</h3>
+        <p data-key="r1Desc">Con internet attivo, i dati vanno al server centrale. La direzione vede chi è dentro e fuori in tempo reale da qualsiasi dispositivo.</p>
+      </div>
+      <div class="resilience-card fade-up">
+        <div class="resilience-icon">📱</div>
+        <div class="resilience-num" data-key="r2Num">Livello 2 · Offline</div>
+        <h3 data-key="r2Title">Funziona Senza Internet</h3>
+        <p data-key="r2Desc">L'app continua a funzionare localmente. I dati si sincronizzano automaticamente non appena la connessione torna disponibile.</p>
+      </div>
+      <div class="resilience-card fade-up">
+        <div class="resilience-icon">🖨️</div>
+        <div class="resilience-num" data-key="r3Num">Livello 3 · Stampa</div>
+        <h3 data-key="r3Title">Backup Cartaceo di Alta Qualità</h3>
+        <p data-key="r3Desc">Anche senza elettricità o internet, il sistema produce report stampati professionali — superiori al registro manuale e sempre disponibili.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="container">
+  <div class="fade-up">
+    <p class="section-label" data-key="featLabel">Funzionalità</p>
+    <h2 class="section-title" data-key="featTitle">Tutto quello che serve, niente di superfluo</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card fade-up">
+      <div class="feature-icon">🔒</div>
+      <h3 data-key="f1Title">Presenza Verificata</h3>
+      <p data-key="f1Desc">Il QR rotante certifica che il residente sia fisicamente al cancello. Nessuna registrazione per delega.</p>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">⚡</div>
+      <h3 data-key="f2Title">Stato in Tempo Reale</h3>
+      <p data-key="f2Desc">L'indicatore pulsante mostra in questo momento se il residente è dentro o fuori dal dormitorio.</p>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">📋</div>
+      <h3 data-key="f3Title">Storico Completo</h3>
+      <p data-key="f3Desc">Ogni accesso è registrato e filtrabile per data, uscite o rientri.</p>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">🌍</div>
+      <h3 data-key="f4Title">4 Lingue</h3>
+      <p data-key="f4Desc">Italiano, Inglese, Farsi e Arabo con supporto completo per le lingue da destra a sinistra.</p>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">👤</div>
+      <h3 data-key="f5Title">Profilo Residente</h3>
+      <p data-key="f5Desc">Ogni residente gestisce nome, numero stanza e può effettuare il logout in autonomia.</p>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">💰</div>
+      <h3 data-key="f6Title">Zero Costi Hardware</h3>
+      <p data-key="f6Desc">Funziona sullo smartphone già posseduto. Nessun tornello, lettore, tessera o infrastruttura fisica.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- COMPARISON -->
+<div class="container">
+  <div class="fade-up">
+    <p class="section-label" data-key="compLabel">Confronto</p>
+    <h2 class="section-title" data-key="compTitle">Registro cartaceo vs Adisurc</h2>
+  </div>
+  <div class="comparison-wrap fade-up">
+    <table>
+      <thead>
+        <tr>
+          <th data-key="compCol0"></th>
+          <th data-key="compCol1">📋 Registro Cartaceo</th>
+          <th data-key="compCol2">✦ Adisurc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-key="crow1">Igiene</td>                <td data-key="crow1a">Penna condivisa ✗</td>      <td data-key="crow1b">Nessun contatto ✓</td></tr>
+        <tr><td data-key="crow2">Velocità</td>              <td data-key="crow2a">Lento, code ✗</td>          <td data-key="crow2b">3 secondi ✓</td></tr>
+        <tr><td data-key="crow3">Visibilità direzione</td>  <td data-key="crow3a">Nessuna ✗</td>              <td data-key="crow3b">Tempo reale ✓</td></tr>
+        <tr><td data-key="crow4">Verifica presenza</td>     <td data-key="crow4a">Non garantita ✗</td>        <td data-key="crow4b">QR fisico ✓</td></tr>
+        <tr><td data-key="crow5">Funziona offline</td>      <td data-key="crow5a">Sempre ✓</td>               <td data-key="crow5b">Sì, con sync ✓</td></tr>
+        <tr><td data-key="crow6">Costo hardware</td>        <td data-key="crow6a">Carta e penne ✗</td>        <td data-key="crow6b">Zero ✓</td></tr>
+        <tr><td data-key="crow7">Backup dati</td>           <td data-key="crow7a">Nessuno ✗</td>              <td data-key="crow7b">Server + stampa ✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SCREENSHOTS -->
+<div class="container" style="padding-top:0">
+  <div class="fade-up">
+    <p class="section-label" data-key="screenLabel">Schermate</p>
+    <h2 class="section-title" data-key="screenTitle">L'app in azione</h2>
+  </div>
+  <div class="screenshots-grid">
+    <div class="screenshot-wrap fade-up"><img src="screenshots/login.png"   alt="Login"   loading="lazy" /><div class="screenshot-label" data-key="sc1">Accesso</div></div>
+    <div class="screenshot-wrap fade-up"><img src="screenshots/home.png"    alt="Home"    loading="lazy" /><div class="screenshot-label" data-key="sc2">Home</div></div>
+    <div class="screenshot-wrap fade-up"><img src="screenshots/profile.png" alt="Profile" loading="lazy" /><div class="screenshot-label" data-key="sc3">Profilo</div></div>
+    <div class="screenshot-wrap fade-up"><img src="screenshots/scan.png"    alt="Scan"    loading="lazy" /><div class="screenshot-label" data-key="sc4">Scansione</div></div>
+    <div class="screenshot-wrap fade-up"><img src="screenshots/confirm.png" alt="Confirm" loading="lazy" /><div class="screenshot-label" data-key="sc5">Conferma</div></div>
+    <div class="screenshot-wrap fade-up"><img src="screenshots/history.png" alt="History" loading="lazy" /><div class="screenshot-label" data-key="sc6">Storico</div></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div id="contact" class="cta-section">
+  <div class="cta-inner fade-up">
+    <h2 class="cta-title" data-key="ctaTitle">Pronti a modernizzare il vostro dormitorio?</h2>
+    <p class="cta-sub"   data-key="ctaSub">Guarda il video, esplora il prototipo e dicci cosa ne pensi. Siamo pronti per il pilota.</p>
+    <a href="mailto:omidfreelance100@gmail.com" class="cta-btn" data-key="ctaBtn">Contattaci per il feedback →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <span>Adisurc</span> &nbsp;·&nbsp; <span data-key="footerBy">Sviluppato da</span> Omid Shojaeian Zanjani &nbsp;·&nbsp; React Native &amp; Expo</p>
+</footer>
+
+<script>
+const T = {
+  it: {
+    badge: '🚀 MVP · Prototipo Funzionante',
+    heroTitle: 'Il Futuro del Controllo Accessi nei <span>Dormitori</span>',
+    heroSub: 'Una soluzione digitale, flessibile e igienica che sostituisce il registro cartaceo con tecnologia QR avanzata.',
+    heroCta: 'Scopri di più →',
+    problemLabel: 'Il Problema',
+    problemTitle: 'Il sistema attuale ha dei limiti reali',
+    problemSub: 'I dormitori usano ancora il registro cartaceo e una penna condivisa. Semplice, ma lento, non igienico e impossibile da scalare.',
+    p1Title: 'Igiene a Rischio',   p1Desc: 'Tutti i residenti condividono la stessa penna. Un rischio sanitario semplice da eliminare con la tecnologia.',
+    p2Title: 'Accesso Lento',      p2Desc: "Code all'ingresso, firma manuale, dipendenza dal personale al cancello. Il sistema rallenta tutti.",
+    p3Title: 'Nessuna Visibilità', p3Desc: 'La direzione non sa in tempo reale chi è dentro e chi è fuori. Nessun dato, nessun controllo.',
+    howLabel: 'Come Funziona',
+    howTitle: 'Tre secondi. Senza toccare nulla.',
+    howSub: "Il residente apre l'app, inquadra il QR al cancello e conferma. La presenza fisica è l'unica chiave — nessuna delega possibile.",
+    s1Title: "Apri l'app e seleziona Uscita o Rientro", s1Desc: 'Il residente vede il suo stato attuale in tempo reale e sceglie l\'azione.',
+    s2Title: 'Scansiona il QR code al cancello',        s2Desc: 'Il QR ruota ogni 30 secondi. Solo chi è fisicamente davanti al cancello può scansionarlo.',
+    s3Title: 'Conferma e via',                          s3Desc: 'Il residente conferma i dettagli e il dato viene salvato e sincronizzato al server.',
+    resLabel: 'Architettura',
+    resTitle: 'Funziona sempre. In ogni condizione.',
+    resSub: 'Tre livelli di resilienza garantiscono che il sistema non si fermi mai — con internet, senza internet, o anche senza elettricità.',
+    r1Num: 'Livello 1 · Online',  r1Title: 'Sincronizzazione in Tempo Reale',  r1Desc: 'Con internet attivo, i dati vanno al server centrale. La direzione vede chi è dentro e fuori in tempo reale da qualsiasi dispositivo.',
+    r2Num: 'Livello 2 · Offline', r2Title: 'Funziona Senza Internet',          r2Desc: "L'app continua a funzionare localmente. I dati si sincronizzano automaticamente non appena la connessione torna.",
+    r3Num: 'Livello 3 · Stampa',  r3Title: 'Backup Cartaceo di Alta Qualità',  r3Desc: 'Anche senza elettricità o internet, il sistema produce report stampati professionali — superiori al registro manuale.',
+    featLabel: 'Funzionalità',
+    featTitle: 'Tutto quello che serve, niente di superfluo',
+    f1Title: 'Presenza Verificata', f1Desc: 'Il QR rotante certifica che il residente sia fisicamente al cancello. Nessuna registrazione per delega.',
+    f2Title: 'Stato in Tempo Reale',f2Desc: "L'indicatore pulsante mostra se il residente è dentro o fuori in questo momento.",
+    f3Title: 'Storico Completo',    f3Desc: 'Ogni accesso è registrato e filtrabile per data, uscite o rientri.',
+    f4Title: '4 Lingue',            f4Desc: 'Italiano, Inglese, Farsi e Arabo con supporto completo per le lingue da destra a sinistra.',
+    f5Title: 'Profilo Residente',   f5Desc: 'Ogni residente gestisce nome, numero stanza e può fare logout in autonomia.',
+    f6Title: 'Zero Costi Hardware', f6Desc: 'Funziona sullo smartphone già posseduto. Nessun tornello, lettore o tessera.',
+    compLabel: 'Confronto',
+    compTitle: 'Registro cartaceo vs Adisurc',
+    compCol0: '', compCol1: '📋 Registro Cartaceo', compCol2: '✦ Adisurc',
+    crow1: 'Igiene',              crow1a: 'Penna condivisa ✗',  crow1b: 'Nessun contatto ✓',
+    crow2: 'Velocità',            crow2a: 'Lento, code ✗',      crow2b: '3 secondi ✓',
+    crow3: 'Visibilità direzione',crow3a: 'Nessuna ✗',          crow3b: 'Tempo reale ✓',
+    crow4: 'Verifica presenza',   crow4a: 'Non garantita ✗',    crow4b: 'QR fisico ✓',
+    crow5: 'Funziona offline',    crow5a: 'Sempre ✓',           crow5b: 'Sì, con sync ✓',
+    crow6: 'Costo hardware',      crow6a: 'Carta e penne ✗',    crow6b: 'Zero ✓',
+    crow7: 'Backup dati',         crow7a: 'Nessuno ✗',          crow7b: 'Server + stampa ✓',
+    screenLabel: 'Schermate', screenTitle: "L'app in azione",
+    sc1:'Accesso', sc2:'Home', sc3:'Profilo', sc4:'Scansione', sc5:'Conferma', sc6:'Storico',
+    ctaTitle: 'Pronti a modernizzare il vostro dormitorio?',
+    ctaSub:   'Guarda il video, esplora il prototipo e dicci cosa ne pensi. Siamo pronti per il pilota.',
+    ctaBtn:   'Contattaci per il feedback →',
+    footerBy: 'Sviluppato da',
+  },
+  en: {
+    badge: '🚀 MVP · Working Prototype',
+    heroTitle: 'The Future of <span>Dormitory</span> Access Management',
+    heroSub: 'A digital, flexible and hygienic solution that replaces the paper logbook with advanced QR technology.',
+    heroCta: 'Learn more →',
+    problemLabel: 'The Problem',
+    problemTitle: 'The current system has real limitations',
+    problemSub: 'Dormitories still rely on a paper logbook and a shared pen. Simple — but slow, unhygienic, and impossible to scale.',
+    p1Title: 'Hygiene Risk',       p1Desc: 'Every resident shares the same pen. A public health risk that technology can eliminate completely.',
+    p2Title: 'Slow Access',        p2Desc: 'Queues at the entrance, manual signing, dependency on staff. The system slows everyone down.',
+    p3Title: 'No Visibility',      p3Desc: 'Management has no real-time view of who is inside or outside. No data, no control.',
+    howLabel: 'How It Works',
+    howTitle: 'Three seconds. No touching anything.',
+    howSub: 'The resident opens the app, scans the gate QR and confirms. Physical presence at the gate is the only key — no proxy logging possible.',
+    s1Title: 'Open the app and tap Exit or Return', s1Desc: 'The resident sees their live status and selects the action.',
+    s2Title: 'Scan the gate QR code',              s2Desc: 'The QR rotates every 30 seconds. Physical presence at the gate is the only way to scan it.',
+    s3Title: 'Confirm and go',                     s3Desc: 'The resident reviews the details, confirms, and the data is saved and synced to the server.',
+    resLabel: 'Architecture',
+    resTitle: 'Works always. Under any condition.',
+    resSub: 'Three layers of resilience ensure the system never stops — online, offline, or even without power.',
+    r1Num: 'Layer 1 · Online',  r1Title: 'Real-Time Synchronisation', r1Desc: 'With internet, all data goes to the central server. Management sees who is in and out in real time from any device.',
+    r2Num: 'Layer 2 · Offline', r2Title: 'Works Without Internet',    r2Desc: 'The app keeps working locally. Data syncs automatically when the connection is restored.',
+    r3Num: 'Layer 3 · Print',   r3Title: 'High-Quality Paper Backup', r3Desc: 'Even without electricity, the system produces professional printed reports — always available as a fallback.',
+    featLabel: 'Features',
+    featTitle: "Everything you need. Nothing you don't.",
+    f1Title: 'Verified Presence',   f1Desc: 'The rotating QR confirms the resident is physically at the gate. No proxy logging possible.',
+    f2Title: 'Live Status',         f2Desc: 'A pulsing indicator shows whether the resident is inside or outside right now.',
+    f3Title: 'Full History',        f3Desc: 'Every entry and exit is logged and filterable by date, exits, or returns.',
+    f4Title: '4 Languages',         f4Desc: 'Italian, English, Farsi and Arabic — with full right-to-left layout support.',
+    f5Title: 'Resident Profile',    f5Desc: 'Each resident manages their own name, room number, and can log out independently.',
+    f6Title: 'Zero Hardware Cost',  f6Desc: 'Runs on the smartphone they already own. No turnstiles, readers, or badges needed.',
+    compLabel: 'Comparison',
+    compTitle: 'Paper logbook vs Adisurc',
+    compCol0: '', compCol1: '📋 Paper Logbook', compCol2: '✦ Adisurc',
+    crow1: 'Hygiene',                crow1a: 'Shared pen ✗',       crow1b: 'No contact ✓',
+    crow2: 'Speed',                  crow2a: 'Slow, queues ✗',     crow2b: '3 seconds ✓',
+    crow3: 'Management visibility',  crow3a: 'None ✗',             crow3b: 'Real-time ✓',
+    crow4: 'Presence verification',  crow4a: 'Not guaranteed ✗',   crow4b: 'Physical QR ✓',
+    crow5: 'Works offline',          crow5a: 'Always ✓',           crow5b: 'Yes, with sync ✓',
+    crow6: 'Hardware cost',          crow6a: 'Paper & pens ✗',     crow6b: 'Zero ✓',
+    crow7: 'Data backup',            crow7a: 'None ✗',             crow7b: 'Server + print ✓',
+    screenLabel: 'Screenshots', screenTitle: 'The app in action',
+    sc1:'Login', sc2:'Home', sc3:'Profile', sc4:'Scan', sc5:'Confirm', sc6:'History',
+    ctaTitle: 'Ready to modernise your dormitory?',
+    ctaSub:   'Watch the video, explore the prototype and tell us what you think. We are ready for the pilot.',
+    ctaBtn:   'Contact us for feedback →',
+    footerBy: 'Built by',
+  },
+  fa: {
+    badge: '🚀 نسخه اولیه · پروتوتایپ کارا',
+    heroTitle: 'آینده مدیریت ورود و خروج در <span>خوابگاه‌ها</span>',
+    heroSub: 'راهکاری دیجیتال، منعطف و بهداشتی که دفتر کاغذی را با فناوری پیشرفته QR جایگزین می‌کند.',
+    heroCta: 'بیشتر بدانید →',
+    problemLabel: 'مشکل فعلی',
+    problemTitle: 'سیستم فعلی محدودیت‌های واقعی دارد',
+    problemSub: 'خوابگاه‌ها هنوز از دفتر کاغذی و خودکار مشترک استفاده می‌کنند. ساده، اما کند، غیربهداشتی و بدون قابلیت مدیریت.',
+    p1Title: 'خطر بهداشتی',       p1Desc: 'همه ساکنین از یک خودکار مشترک استفاده می‌کنند. یک خطر بهداشتی که با فناوری به راحتی حل می‌شود.',
+    p2Title: 'دسترسی کند',        p2Desc: 'صف در ورودی، امضای دستی، وابستگی به حضور کارکنان. سیستم همه را کند می‌کند.',
+    p3Title: 'بدون دید مدیریتی', p3Desc: 'مدیریت در لحظه نمی‌داند چه کسانی داخل یا خارج هستند. هیچ داده‌ای وجود ندارد.',
+    howLabel: 'نحوه کارکرد',
+    howTitle: 'سه ثانیه. بدون لمس هیچ چیز.',
+    howSub: 'ساکن اپ را باز می‌کند، کد QR دروازه را اسکن می‌کند و تأیید می‌دهد. حضور فیزیکی در دروازه کاملاً احراز می‌شود — هیچ نیابتی ممکن نیست.',
+    s1Title: 'اپ را باز کنید و خروج یا بازگشت را انتخاب کنید', s1Desc: 'ساکن وضعیت فعلی خود را می‌بیند و عملیات مورد نظر را انتخاب می‌کند.',
+    s2Title: 'کد QR دروازه را اسکن کنید',                      s2Desc: 'کد QR هر ۳۰ ثانیه تغییر می‌کند. حضور فیزیکی در دروازه تنها راه اسکن است.',
+    s3Title: 'تأیید و برو',                                     s3Desc: 'ساکن جزئیات را بررسی و تأیید می‌کند. اطلاعات ذخیره و با سرور همگام‌سازی می‌شود.',
+    resLabel: 'معماری',
+    resTitle: 'همیشه کار می‌کند. در هر شرایطی.',
+    resSub: 'سه لایه پایداری تضمین می‌کنند سیستم هرگز متوقف نشود — با اینترنت، بدون اینترنت، یا حتی بدون برق.',
+    r1Num: 'لایه ۱ · آنلاین',  r1Title: 'همگام‌سازی لحظه‌ای',          r1Desc: 'با اینترنت، تمام داده‌ها به سرور مرکزی ارسال می‌شوند. مدیریت از هر دستگاهی می‌تواند وضعیت را ببیند.',
+    r2Num: 'لایه ۲ · آفلاین',  r2Title: 'بدون اینترنت هم کار می‌کند', r2Desc: 'اپ به صورت محلی به کار ادامه می‌دهد. داده‌ها به محض بازگشت اتصال همگام‌سازی می‌شوند.',
+    r3Num: 'لایه ۳ · چاپ',     r3Title: 'پشتیبان کاغذی با کیفیت بالا', r3Desc: 'حتی بدون برق یا اینترنت، سیستم گزارش‌های چاپی حرفه‌ای تولید می‌کند — همیشه در دسترس.',
+    featLabel: 'ویژگی‌ها',
+    featTitle: 'هر آنچه نیاز دارید، نه بیشتر.',
+    f1Title: 'احراز حضور',          f1Desc: 'QR چرخشی تأیید می‌کند ساکن واقعاً در دروازه حضور دارد. هیچ نیابتی ممکن نیست.',
+    f2Title: 'وضعیت لحظه‌ای',      f2Desc: 'نشانگر ضربانی نشان می‌دهد ساکن الان داخل است یا خارج.',
+    f3Title: 'تاریخچه کامل',       f3Desc: 'تمام ورود و خروج‌ها ثبت و قابل فیلتر بر اساس تاریخ، خروج یا بازگشت.',
+    f4Title: '۴ زبان',             f4Desc: 'ایتالیایی، انگلیسی، فارسی و عربی با پشتیبانی کامل از چیدمان راست به چپ.',
+    f5Title: 'پروفایل ساکن',       f5Desc: 'هر ساکن نام، شماره اتاق خود را مدیریت و می‌تواند از حساب خارج شود.',
+    f6Title: 'بدون هزینه سخت‌افزار', f6Desc: 'روی گوشی خود ساکن کار می‌کند. بدون گیت، کارتخوان یا کارت دسترسی.',
+    compLabel: 'مقایسه',
+    compTitle: 'دفتر کاغذی در برابر آدیسورک',
+    compCol0: '', compCol1: '📋 دفتر کاغذی', compCol2: '✦ آدیسورک',
+    crow1: 'بهداشت',        crow1a: 'خودکار مشترک ✗',       crow1b: 'بدون تماس ✓',
+    crow2: 'سرعت',          crow2a: 'کند، صف ✗',             crow2b: '۳ ثانیه ✓',
+    crow3: 'دید مدیریتی',   crow3a: 'هیچ ✗',                crow3b: 'لحظه‌ای ✓',
+    crow4: 'احراز حضور',    crow4a: 'تضمین نشده ✗',          crow4b: 'QR فیزیکی ✓',
+    crow5: 'کارکرد آفلاین', crow5a: 'همیشه ✓',              crow5b: 'بله، با همگام‌سازی ✓',
+    crow6: 'هزینه سخت‌افزار',crow6a: 'کاغذ و خودکار ✗',    crow6b: 'صفر ✓',
+    crow7: 'پشتیبان‌گیری',  crow7a: 'هیچ ✗',                crow7b: 'سرور + چاپ ✓',
+    screenLabel: 'تصاویر اپ', screenTitle: 'اپ در عمل',
+    sc1:'ورود', sc2:'خانه', sc3:'پروفایل', sc4:'اسکن', sc5:'تأیید', sc6:'تاریخچه',
+    ctaTitle: 'آماده‌اید خوابگاه خود را مدرن کنید؟',
+    ctaSub:   'ویدیو را ببینید، پروتوتایپ را بررسی کنید و نظرتان را با ما در میان بگذارید.',
+    ctaBtn:   'برای بازخورد تماس بگیرید →',
+    footerBy: 'طراحی شده توسط',
+  }
+};
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  const isRTL = lang === 'fa';
+  document.documentElement.lang = lang;
+  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  document.body.classList.toggle('rtl', isRTL);
+  const data = T[lang];
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const v = data[el.getAttribute('data-key')];
+    if (v !== undefined) el.innerHTML = v;
+  });
+}
+
+// Scroll fade-in
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 90);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
